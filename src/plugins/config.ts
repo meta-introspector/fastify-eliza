@@ -52,7 +52,7 @@ export const loadConfig: () => Env = () => {
 
   envSchema<Env>({
     data: result.parsed,
-   // schema,
+    schema,
   });
 
   return result.parsed as Env;
