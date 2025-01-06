@@ -1,6 +1,6 @@
 import path from "path";
 import fp from "fastify-plugin";
-import envSchema from "env-schema";
+//import envSchema from "env-schema";
 import { S } from "fluent-json-schema";
 //import * as S from 'fluent-json-schema'
 
@@ -50,10 +50,10 @@ export const loadConfig: () => Env = () => {
     throw new Error(result.error);
   }
 
-  envSchema<Env>({
-    data: result.parsed,
-    schema,
-  });
+  //  envSchema<Env>({
+  //  data: result.parsed,
+  //  schema,
+  //});
 
   return result.parsed as Env;
 };

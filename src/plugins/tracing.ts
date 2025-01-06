@@ -10,16 +10,18 @@ import { createSdk } from "../config/tracing-config.js";
 export default fp<OpenTelemetryPluginOptions>(
   async (fastify, _opts) => {
     createSdk(fastify);
-
-    fastify.register(openTelemetryPlugin, {
-      //wrapRoutes: true,
+    fastify.register(openTelemetryPlugin,{wrapRoutes: true});
+  });
+    
       //formatSpanName: (request:any) => `${request.url} - ${request.method}`,
-    });
-  },
-  {
+      //}
+    //);
+    //},
+    /*
+    {
     name: "tracingPlugin",
     fastify: "3.x",
     dependencies: [],
     decorators: { fastify: ["config"] },
-  }
-);
+    }*/
+//);
