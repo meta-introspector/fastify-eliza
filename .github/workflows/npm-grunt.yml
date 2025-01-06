@@ -30,5 +30,6 @@ jobs:
     - name: Build
       run: |
         pnpm install
-        pnpm dev
+        pnpm build:ts
+        pnpm test
         
