@@ -1,8 +1,7 @@
-import path from "path";
+//import path from "path";
 import fp from "fastify-plugin";
-//import envSchema from "env-schema";
+//import fastifyEnv from "@fastify/env";
 import { S } from "fluent-json-schema";
-//import * as S from 'fluent-json-schema'
 
 interface Env {
   NODE_ENV: string;
@@ -38,34 +37,35 @@ const schema = S.object()
 
 console.log(JSON.stringify(schema.valueOf(), undefined, 2))
 
-export const loadConfig: () => Env = () => {
-  const result = require("dotenv").config({
-    path: path.join(
-      __dirname,
-      `../../${process.env.NODE_ENV ?? "development"}.env`
-    ),
-  });
+//export const loadConfig: () => Env = () => {
+//  const result = require("dotenv").config({
+//    path: path.join(
+//      __dirname,
+//      `../../${process.env.NODE_ENV ?? "development"}.env`
+//    ),
+//  });
 
-  if (result.error) {
-    throw new Error(result.error);
-  }
+//  if (result.error) {
+//    throw new Error(result.error);
+//  }
 
   //  envSchema<Env>({
   //  data: result.parsed,
   //  schema,
   //});
 
-  return result.parsed as Env;
-};
+//  return result.parsed as Env;
+//return {}
+//};
 
 export default fp(
   async (fastify, _opts) => {
-    const config = loadConfig();
-    fastify.decorate("config", config);
+    //const config = loadConfig();
+    //fastify.decorate("config", config);
   },
   {
     name: "configPlugin",
-    fastify: "3.x",
+    fastify: "5.2.x",
     dependencies: [],
   }
 );
@@ -74,4 +74,22 @@ declare module "fastify" {
   export interface FastifyInstance {
     config: Env;
   }
+}
+
+const schema2 = {
+  type: 'object',
+  required: [ 'PORT' ],
+  properties: {
+    PORT: {
+      type: 'string',
+      default: 3000
+    }
+  }
+}
+
+export const options = {
+  confKey: 'config', // optional, default: 'config'
+  schema: schema,
+  schema2:schema2,
+  //data: data // optional, default: process.env
 }

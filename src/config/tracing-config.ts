@@ -1,7 +1,7 @@
 // taken from https://github.com/nikesh-ag/fastify-graphql-ts-observ-template.git
 import { NodeTracerProvider } from "@opentelemetry/sdk-trace-node";
 import { Resource } from "@opentelemetry/resources";
-import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
+import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from "@opentelemetry/semantic-conventions";
 import {
   ConsoleSpanExporter,
   SimpleSpanProcessor,
@@ -19,12 +19,11 @@ import { FastifyInstance } from "fastify";
 // loadConfig();
 
 export const createSdk = (fastify: FastifyInstance): void => {
+  console.log("fastify.config",fastify.config);
   const sdk = new NodeTracerProvider({
     resource: new Resource({
-      [SemanticResourceAttributes.SERVICE_NAME]:
-        fastify.config.SERVICE_NAME || "default_name",
-      [SemanticResourceAttributes.SERVICE_VERSION]:
-        fastify.config.SERVICE_VERSION || "default_version",
+      [ATTR_SERVICE_NAME]:"eliza",
+      [ATTR_SERVICE_VERSION]:      "0.0.1",
     }),
   });
 
@@ -41,20 +40,25 @@ export const createSdk = (fastify: FastifyInstance): void => {
     ],
   });
 
-  if (fastify.config.ZIPKIN_EXPORTER === "true") {
+  const zipkinUrl = 'http://localhost';
+const zipkinPort = '9411';
+const zipkinPath = '/api/v2/spans';
+const zipkinURL = `${zipkinUrl}:${zipkinPort}${zipkinPath}`;
+
+  //  if (fastify.config.ZIPKIN_EXPORTER === "true") {
     sdk.addSpanProcessor(
       new SimpleSpanProcessor(
         new ZipkinExporter({
-          serviceName: fastify.config.SERVICE_NAME,
-          url: fastify.config.ZIPKIN_URL,
+          serviceName: "eliza-server",
+          url: zipkinURL,
         })
       )
     );
-  }
 
-  if (fastify.config.CONSOLE_EXPORTER === "true") {
+
+  //  if (fastify.config.CONSOLE_EXPORTER === "true") {
     sdk.addSpanProcessor(new SimpleSpanProcessor(new ConsoleSpanExporter()));
-  }
+  //}
 
   sdk.register();
 
